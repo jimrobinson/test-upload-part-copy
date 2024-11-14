@@ -1,0 +1,57 @@
+aws --profile test-aws s3api create-multipart-upload --bucket test-jrobinso --key zero --checksum-algorithm SHA256
+aws --profile test-aws s3api upload-part --bucket test-jrobinso --key zero --part-number 1 --upload-id SqWUS6Bygq8vDXL9hm7_kckuI2vG5dDwAwUsyHPVmPs2w3_b2ZMJ99G9_aA4Pqe8YNyqBvi3ND.Z5A.UvbTdBWaCcqo0EUWSD.sF986QV6HBiI6_9hgh4P92926ZSBVC --body zero.dat --checksum-algorithm SHA256
+aws --profile test-aws s3api complete-multipart-upload --bucket test-jrobinso --key zero --multipart-upload Parts=[{ETag="b6d81b360a5672d80c27430f39153e2c",ChecksumSHA256=MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g=,PartNumber=1}] --upload-id SqWUS6Bygq8vDXL9hm7_kckuI2vG5dDwAwUsyHPVmPs2w3_b2ZMJ99G9_aA4Pqe8YNyqBvi3ND.Z5A.UvbTdBWaCcqo0EUWSD.sF986QV6HBiI6_9hgh4P92926ZSBVC
+{
+    "ServerSideEncryption": "AES256",
+    "Location": "https://test-jrobinso.s3.us-west-2.amazonaws.com/zero",
+    "Bucket": "test-jrobinso",
+    "Key": "zero",
+    "ETag": "\"3eaf2c9512f76a55da265ad51ac21393-1\"",
+    "ChecksumSHA256": "WZ1xAz1wCsiSoOSPphsSXS9ZlBu0XaGQlETUPG7gurI=-1"
+}
+aws --profile test-aws s3api get-object-attributes --bucket test-jrobinso --key zero --object-attributes ETag Checksum ObjectParts StorageClass ObjectSize
+{
+    "LastModified": "2024-11-14T15:18:10+00:00",
+    "ETag": "3eaf2c9512f76a55da265ad51ac21393-1",
+    "Checksum": {
+        "ChecksumSHA256": "WZ1xAz1wCsiSoOSPphsSXS9ZlBu0XaGQlETUPG7gurI="
+    },
+    "ObjectParts": {
+        "TotalPartsCount": 1,
+        "PartNumberMarker": 0,
+        "NextPartNumberMarker": 1,
+        "MaxParts": 1000,
+        "IsTruncated": false,
+        "Parts": [
+            {
+                "PartNumber": 1,
+                "Size": 1048576,
+                "ChecksumSHA256": "MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g="
+            }
+        ]
+    },
+    "StorageClass": "STANDARD",
+    "ObjectSize": 1048576
+}
+aws --profile test-aws s3api create-multipart-upload --bucket test-jrobinso --key zero.1 --checksum-algorithm SHA256
+aws --profile test-aws s3api upload-part-copy --bucket test-jrobinso --key zero.1 --copy-source test-jrobinso/zero --part-number 1 --upload-id R5io_HfrmyLvmcLmxcSq3KP8mRetJI_q0ZCG_M76QBKT2bi2aiGnMbjo84sUMVY16mjlfg21nwH2dwKo8a77VeGDijfB5jJ1P90iDUcR3AGHCrM46qe4h.DClEdTcQe.
+aws --profile test-aws s3api complete-multipart-upload --bucket test-jrobinso --key zero.1 --multipart-upload Parts=[{ETag="b6d81b360a5672d80c27430f39153e2c",ChecksumSHA256=MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g=,PartNumber=1}] --upload-id R5io_HfrmyLvmcLmxcSq3KP8mRetJI_q0ZCG_M76QBKT2bi2aiGnMbjo84sUMVY16mjlfg21nwH2dwKo8a77VeGDijfB5jJ1P90iDUcR3AGHCrM46qe4h.DClEdTcQe.
+{
+    "ServerSideEncryption": "AES256",
+    "Location": "https://test-jrobinso.s3.us-west-2.amazonaws.com/zero.1",
+    "Bucket": "test-jrobinso",
+    "Key": "zero.1",
+    "ETag": "\"3eaf2c9512f76a55da265ad51ac21393-1\"",
+    "ChecksumSHA256": "WZ1xAz1wCsiSoOSPphsSXS9ZlBu0XaGQlETUPG7gurI=-1"
+}
+aws --profile test-aws s3api create-multipart-upload --bucket test-jrobinso --key zero.2 --checksum-algorithm SHA256
+aws --profile test-aws s3api upload-part-copy --bucket test-jrobinso --key zero.2 --copy-source test-jrobinso/zero --part-number 1 --upload-id zvyr.VmlKuj2wBZFJe0vTdup6Bjc2a7TM1KkQryYmGmq44l_dz3x8lOwVPeW1jWdda0zIehL0a1SPvBycrLIaAq9ZyjM.WALjs79KC.3p6xtnI2YwLC89X_cU_A1lL2Z
+aws --profile test-aws s3api complete-multipart-upload --bucket test-jrobinso --key zero.2 --multipart-upload Parts=[{ETag="b6d81b360a5672d80c27430f39153e2c",ChecksumSHA256=MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g=,PartNumber=1}] --upload-id zvyr.VmlKuj2wBZFJe0vTdup6Bjc2a7TM1KkQryYmGmq44l_dz3x8lOwVPeW1jWdda0zIehL0a1SPvBycrLIaAq9ZyjM.WALjs79KC.3p6xtnI2YwLC89X_cU_A1lL2Z
+{
+    "ServerSideEncryption": "AES256",
+    "Location": "https://test-jrobinso.s3.us-west-2.amazonaws.com/zero.2",
+    "Bucket": "test-jrobinso",
+    "Key": "zero.2",
+    "ETag": "\"3eaf2c9512f76a55da265ad51ac21393-1\"",
+    "ChecksumSHA256": "WZ1xAz1wCsiSoOSPphsSXS9ZlBu0XaGQlETUPG7gurI=-1"
+}

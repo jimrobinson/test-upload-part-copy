@@ -1,0 +1,48 @@
+aws --profile test-minio s3api create-multipart-upload --bucket test-jrobinso --key zero --checksum-algorithm SHA256
+aws --profile test-minio s3api upload-part --bucket test-jrobinso --key zero --part-number 1 --upload-id ZjNmZjgyZGUtOGFmMy00ZGViLTlmMzAtOGY3MDY4N2RlNjcxLjUzZmViMGIxLWNkOWMtNDE0ZS1iZjAxLTgyYTBiMTAxMzY0ZngxNzMxNTk3NTQyMTYwMzA5MTM3 --body zero.dat --checksum-algorithm SHA256
+aws --profile test-minio s3api complete-multipart-upload --bucket test-jrobinso --key zero --multipart-upload Parts=[{ETag="b6d81b360a5672d80c27430f39153e2c",ChecksumSHA256=MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g=,PartNumber=1}] --upload-id ZjNmZjgyZGUtOGFmMy00ZGViLTlmMzAtOGY3MDY4N2RlNjcxLjUzZmViMGIxLWNkOWMtNDE0ZS1iZjAxLTgyYTBiMTAxMzY0ZngxNzMxNTk3NTQyMTYwMzA5MTM3
+{
+    "Location": "http://test.elm.stanford.edu:9000/test-jrobinso/zero",
+    "Bucket": "test-jrobinso",
+    "Key": "zero",
+    "ETag": "\"3eaf2c9512f76a55da265ad51ac21393-1\"",
+    "ChecksumSHA256": "WZ1xAz1wCsiSoOSPphsSXS9ZlBu0XaGQlETUPG7gurI=-1"
+}
+aws --profile test-minio s3api get-object-attributes --bucket test-jrobinso --key zero --object-attributes ETag Checksum ObjectParts StorageClass ObjectSize
+{
+    "LastModified": "2024-11-14T15:19:04+00:00",
+    "ETag": "3eaf2c9512f76a55da265ad51ac21393-1",
+    "Checksum": {
+        "ChecksumSHA256": "WZ1xAz1wCsiSoOSPphsSXS9ZlBu0XaGQlETUPG7gurI="
+    },
+    "ObjectParts": {
+        "TotalPartsCount": 1,
+        "PartNumberMarker": 0,
+        "NextPartNumberMarker": 1,
+        "MaxParts": 10000,
+        "IsTruncated": false,
+        "Parts": [
+            {
+                "PartNumber": 1,
+                "Size": 1048576,
+                "ChecksumSHA256": "MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g="
+            }
+        ]
+    },
+    "StorageClass": "STANDARD",
+    "ObjectSize": 1048576
+}
+aws --profile test-minio s3api create-multipart-upload --bucket test-jrobinso --key zero.1 --checksum-algorithm SHA256
+aws --profile test-minio s3api upload-part-copy --bucket test-jrobinso --key zero.1 --copy-source test-jrobinso/zero --part-number 1 --upload-id ZjNmZjgyZGUtOGFmMy00ZGViLTlmMzAtOGY3MDY4N2RlNjcxLjBjMWEzYjZiLTk0YWItNDc0ZS1hZTAzLWFiNTEyNzU0NjUxOHgxNzMxNTk3NTQ3MDM2MjI1NDY3
+
+An error occurred (InvalidArgument) when calling the UploadPartCopy operation: Invalid arguments provided for test-jrobinso/ffc760738e5b213014b88e7e0445f54b8a1c543c80e6a41955e3fe506bda06f8/0c1a3b6b-94ab-474e-ae03-ab5127546518x1731597547036225467: (checksum missing, want "SHA256", got "")
+aws --profile test-minio s3api complete-multipart-upload --bucket test-jrobinso --key zero.1 --multipart-upload Parts=[{ETag=,ChecksumSHA256=MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g=,PartNumber=1}] --upload-id ZjNmZjgyZGUtOGFmMy00ZGViLTlmMzAtOGY3MDY4N2RlNjcxLjBjMWEzYjZiLTk0YWItNDc0ZS1hZTAzLWFiNTEyNzU0NjUxOHgxNzMxNTk3NTQ3MDM2MjI1NDY3
+
+An error occurred (InvalidPart) when calling the CompleteMultipartUpload operation: One or more of the specified parts could not be found.  The part may not have been uploaded, or the specified entity tag may not match the part's entity tag.
+aws --profile test-minio s3api create-multipart-upload --bucket test-jrobinso --key zero.2 --checksum-algorithm SHA256
+aws --profile test-minio s3api upload-part-copy --bucket test-jrobinso --key zero.2 --copy-source test-jrobinso/zero --part-number 1 --upload-id ZjNmZjgyZGUtOGFmMy00ZGViLTlmMzAtOGY3MDY4N2RlNjcxLmI5OTVlMTZjLTY3YTktNDExZi1iYjA4LTM0MmNiZTg0OWQ3MXgxNzMxNTk3NTUwMDA3NDAzOTg1
+
+An error occurred (InvalidArgument) when calling the UploadPartCopy operation: Invalid arguments provided for test-jrobinso/84381d57a52009499c076c4f398d8c095b51aae1d67148f31e762e5a09c3e43f/b995e16c-67a9-411f-bb08-342cbe849d71x1731597550007403985: (checksum missing, want "SHA256", got "")
+aws --profile test-minio s3api complete-multipart-upload --bucket test-jrobinso --key zero.2 --multipart-upload Parts=[{ETag=,ChecksumSHA256=MOFJVevxNSJm3C/4Bn5oEEYH51CrudOzZYK4r5Cfy1g=,PartNumber=1}] --upload-id ZjNmZjgyZGUtOGFmMy00ZGViLTlmMzAtOGY3MDY4N2RlNjcxLmI5OTVlMTZjLTY3YTktNDExZi1iYjA4LTM0MmNiZTg0OWQ3MXgxNzMxNTk3NTUwMDA3NDAzOTg1
+
+An error occurred (InvalidPart) when calling the CompleteMultipartUpload operation: One or more of the specified parts could not be found.  The part may not have been uploaded, or the specified entity tag may not match the part's entity tag.
