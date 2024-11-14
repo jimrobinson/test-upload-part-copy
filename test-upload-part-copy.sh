@@ -72,7 +72,7 @@ while [ ${#} -gt 0 ]; do
 		fi
 		;;
 	*)
-		echo "unhandle argument: ${1}";
+		echo "unhanded argument: ${1}";
 		exit 1;
 		;;
 	esac
@@ -129,7 +129,7 @@ echo "${aws[@]}" s3api get-object-attributes --bucket "${bucket}" --key "${key}"
 "${aws[@]}" s3api get-object-attributes --bucket "${bucket}" --key "${key}" --object-attributes ETag Checksum ObjectParts StorageClass ObjectSize
 
 ########################################
-# bucket/key.1
+# bucket/key.1 (server side copy w/o specifying byte range)
 
 # clone bucket/key to bucket/key.1 using upload-part-copy w/o range
 echo "${aws[@]}" s3api create-multipart-upload --bucket "${bucket}" --key "${key}.1" --checksum-algorithm "${algorithm}";
@@ -138,7 +138,7 @@ upload_id2=$("${aws[@]}" s3api create-multipart-upload --bucket "${bucket}" --ke
 echo "${aws[@]}" s3api upload-part-copy --bucket "${bucket}" --key "${key}.1" --copy-source "${bucket}/${key}" --part-number 1 --upload-id "${upload_id2}";
 part=$("${aws[@]}" s3api upload-part-copy --bucket "${bucket}" --key "${key}.1" --copy-source "${bucket}/${key}" --part-number 1 --upload-id "${upload_id2}" | jq | tee /dev/tty);
 
-# collect etag, checksum, and set the part number and use it to create the --multipart-upload argument the cli is expecting
+# collect etag and set the part number, use them and the original checksum to create the --multipart-upload argument the cli is expecting
 etag=$(echo "${part}" | jq -r .CopyPartResult.ETag);
 partno=1;
 
@@ -149,7 +149,7 @@ echo "${aws[@]}" s3api complete-multipart-upload --bucket "${bucket}" --key "${k
 "${aws[@]}" s3api complete-multipart-upload --bucket "${bucket}" --key "${key}.1" --multipart-upload "${multiparts}" --upload-id "${upload_id2}";
 
 ########################################
-# bucket/key.2
+# bucket/key.2 (server side copy w/ full byte range)
 
 # clone bucket/key to bucket/key.2 using upload-part-copy w/ range
 echo "${aws[@]}" s3api create-multipart-upload --bucket "${bucket}" --key "${key}.2" --checksum-algorithm "${algorithm}";
@@ -158,7 +158,7 @@ upload_id3=$("${aws[@]}" s3api create-multipart-upload --bucket "${bucket}" --ke
 echo "${aws[@]}" s3api upload-part-copy --bucket "${bucket}" --key "${key}.2" --copy-source "${bucket}/${key}" --part-number 1 --upload-id "${upload_id3}";
 part=$("${aws[@]}" s3api upload-part-copy --bucket "${bucket}" --key "${key}.2" --copy-source "${bucket}/${key}" --copy-source-range "bytes=0-$((byte_size - 1))" --part-number 1 --upload-id "${upload_id3}" | jq | tee /dev/tty);
 
-# collect etag and set the part number, use them to create the --multipart-upload argument the cli is expecting
+# collect etag and set the part number, use them and the original checksum to create the --multipart-upload argument the cli is expecting
 etag=$(echo "${part}" | jq -r .CopyPartResult.ETag);
 partno=1;
 
